@@ -1,4 +1,11 @@
 {
-    "firstname":"Jim-Updated",
-    "lastname":"Lastname-Updated"
+  "firstname": "Jim-Updated",
+  "lastname": "Brown-Updated",
+  "totalprice": 222,
+  "depositpaid": false,
+  "bookingdates": {
+    "checkin": "2026-04-24",
+    "checkout": "2026-04-27"
+  },
+  "additionalneeds": "Dinner"
 }

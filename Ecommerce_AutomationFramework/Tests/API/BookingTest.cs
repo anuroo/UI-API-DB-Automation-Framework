@@ -50,11 +50,14 @@ public class BookingTest
         var createResponse = await _bookingService.CreateBookingAsync(createBookRequest);
         var createdBooking = ResponseParser.Deserialize<CreateBookingResponse>(createResponse);
         var bookingId = createdBooking.Bookingid;
-        var updateBookRequest=TestDataLoader.LoadJson<UpdateBookingRequest>("API/UpdateBooking.json");
-        ResponseLogger.PrintRequest<UpdateBookingRequest>(updateBookRequest);
-        var updateBookingResponse=await _bookingService.UpdateBookngAsync(bookingId,updateBookRequest,token);
+        var updateBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/UpdateBooking.json");
+        ResponseLogger.PrintRequest<BookingRequest>(updateBookRequest);
+        var updateBookingResponse=await _bookingService.UpdateBookingAsync(bookingId,updateBookRequest,token);
+        var updateBooking=ResponseParser.Deserialize<BookingRequest>(updateBookingResponse);
         ResponseLogger.PrintResponse(updateBookingResponse);
         ResponseValidators.ValidateStatusCode(updateBookingResponse,200);
+        Assert.That(updateBooking.FirstName,Is.EqualTo(updateBookRequest.FirstName));
+        Assert.That(updateBooking.LastName,Is.EqualTo(updateBookRequest.LastName));
 
     }
 

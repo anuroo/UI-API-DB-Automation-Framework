@@ -45,7 +45,7 @@ public class BookingService
 
         return _client.ExecuteAsync(createBookRequest);
     }
-    public Task<RestResponse> UpdateBookngAsync(int bookingid,UpdateBookingRequest updateRequest,string token)
+    public Task<RestResponse> UpdateBookingAsync(int bookingid,BookingRequest updateRequest,string token)
     {
         var updateBookingRequest=new RequestBuilder(updateBookingEndpoint(bookingid),Method.Put)
         .AddHeaders(new Dictionary<string, string>
