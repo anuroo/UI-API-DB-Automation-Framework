@@ -36,6 +36,8 @@ public class BookingTest
         var createBookingResponse=await _bookingService.CreateBookingAsync(createBookRequest);
         ResponseLogger.PrintResponse(createBookingResponse);
         ResponseValidators.ValidateStatusCode(createBookingResponse,200);
+        var createBooking=ResponseParser.Deserialize<CreateBookingResponse>(createBookingResponse);
+        Assert.That(createBooking.Bookingid,Is.GreaterThan(0));
 
     }
     [Test]
@@ -58,6 +60,10 @@ public class BookingTest
         ResponseValidators.ValidateStatusCode(updateBookingResponse,200);
         Assert.That(updateBooking.FirstName,Is.EqualTo(updateBookRequest.FirstName));
         Assert.That(updateBooking.LastName,Is.EqualTo(updateBookRequest.LastName));
+        Assert.That(updateBooking.TotalPrice, Is.EqualTo(updateBookRequest.TotalPrice));
+        Assert.That(updateBooking.DepositPaid, Is.EqualTo(updateBookRequest.DepositPaid));
+        Assert.That(updateBooking.AdditionalNeeds, Is.EqualTo(updateBookRequest.AdditionalNeeds));
+
 
     }
 

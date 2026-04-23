@@ -20,5 +20,7 @@ public class AuthTest
         var authResponse=await _authService.CreateAuthAsync(authRequest);
         ResponseLogger.PrintResponse(authResponse);
         ResponseValidators.ValidateStatusCode(authResponse,200);
+        var tokenResponseValidation=ResponseParser.Deserialize<AuthResponse>(authResponse);
+        Assert.That(tokenResponseValidation.Token,Is.Not.Null.And.Not.Empty);
     } 
 }
