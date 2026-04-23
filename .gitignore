@@ -1,0 +1,11 @@
+bin/
+obj/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+.coverage/
+.vs/
+.DS_Store
+*.user
+*.suo

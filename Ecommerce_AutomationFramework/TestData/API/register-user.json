@@ -1,0 +1,16 @@
+{
+  "accountType": "USER",
+  "address": "2 Automation Street",
+  "allowOffersPromotion": true,
+  "aobUser": false,
+  "cityName": "Bengaluru",
+  "country": "India",
+  "email": "automationuser@example.com",
+  "firstName": "AutomationUser",
+  "lastName": "UserAutomation",
+  "loginName": "automationuser@12",
+  "password": "Password@12",
+  "phoneNumber": "9999999998",
+  "stateProvince": "Karnataka",
+  "zipCode": "560002"
+}
