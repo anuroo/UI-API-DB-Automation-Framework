@@ -1,4 +1,3 @@
-using System.Text.Json;
 using RestSharp;
 [TestFixture]
 public class AuthTest
@@ -12,7 +11,7 @@ public class AuthTest
     }
 
     [Test]
-    [Category("Booking API")]
+    [Category("Smoke")]
     public async Task CreateAuthToken()
     {
         var authRequest=TestDataLoader.LoadJson<AuthRequest>("API/CreateAuth.json");
