@@ -56,4 +56,22 @@ public class BookingService
 
         return _client.ExecuteAsync(updateBookingRequest);
     }
+    public Task<RestResponse>GetBookingByIdAsync(int bookingID)
+    {
+        var request=new RequestBuilder($"/booking/{bookingID}",Method.Get)
+        .AddHeaders(new Dictionary<string, string>
+        {
+            ["Accept"]="application/json"
+        }).Build();
+        return _client.ExecuteAsync(request);
+    }
+    public Task<RestResponse> DeleteBookingIdAsync(int bookingID,string token)
+    {
+        var request=new RequestBuilder($"/booking/{bookingID}",Method.Delete)
+        .AddHeaders(new Dictionary<string, string>
+        {
+           ["Cookie"]=$"token={token}" 
+        }).Build();
+        return _client.ExecuteAsync(request);
+    }
 }

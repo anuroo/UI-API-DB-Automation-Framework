@@ -1,3 +1,4 @@
+// using System.ComponentModel; 
 using RestSharp;
 [TestFixture]
 public class BookingTest
@@ -48,14 +49,17 @@ public class BookingTest
         var authResponse = await _authService.CreateAuthAsync(authRequest);
         var tokenResponse=ResponseParser.Deserialize<AuthResponse>(authResponse);
         var token=tokenResponse.Token;
+        
         var createBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
         var createResponse = await _bookingService.CreateBookingAsync(createBookRequest);
         var createdBooking = ResponseParser.Deserialize<CreateBookingResponse>(createResponse);
         var bookingId = createdBooking.Bookingid;
+        
         var updateBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/UpdateBooking.json");
         ResponseLogger.PrintRequest<BookingRequest>(updateBookRequest);
         var updateBookingResponse=await _bookingService.UpdateBookingAsync(bookingId,updateBookRequest,token);
         var updateBooking=ResponseParser.Deserialize<BookingRequest>(updateBookingResponse);
+        
         ResponseLogger.PrintResponse(updateBookingResponse);
         ResponseValidators.ValidateStatusCode(updateBookingResponse,200);
         Assert.That(updateBooking.FirstName,Is.EqualTo(updateBookRequest.FirstName));
@@ -63,8 +67,113 @@ public class BookingTest
         Assert.That(updateBooking.TotalPrice, Is.EqualTo(updateBookRequest.TotalPrice));
         Assert.That(updateBooking.DepositPaid, Is.EqualTo(updateBookRequest.DepositPaid));
         Assert.That(updateBooking.AdditionalNeeds, Is.EqualTo(updateBookRequest.AdditionalNeeds));
+    }
+    [Test]
+    [Category("Booking API")]
+    public async Task GetBookingId()
+    {
+        var authRequest=TestDataLoader.LoadJson<AuthRequest>("API/CreateAuth.json");
+        var authResponse=await _authService.CreateAuthAsync(authRequest);
+        var tokenResponse=ResponseParser.Deserialize<AuthResponse>(authResponse);
+        var testToken=tokenResponse.Token;
+
+        var createBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
+        var createBookingResponse=await _bookingService.CreateBookingAsync(createBookRequest);
+        var createBookingId=ResponseParser.Deserialize<CreateBookingResponse>(createBookingResponse);
+        var bookingId=createBookingId.Bookingid;
+        Assert.That(bookingId,Is.GreaterThan(0));
+
+        var getBookingIdresponse=await _bookingService.GetBookingByIdAsync(bookingId);
+        ResponseLogger.PrintResponse(getBookingIdresponse);
+        ResponseValidators.ValidateStatusCode(getBookingIdresponse,200);
+
+        var actual = ResponseParser.Deserialize<BookingRequest>(getBookingIdresponse);
+        Assert.That(actual.FirstName, Is.EqualTo(createBookRequest.FirstName));
+        Assert.That(actual.LastName, Is.EqualTo(createBookRequest.LastName));
+        Assert.That(actual.TotalPrice, Is.EqualTo(createBookRequest.TotalPrice));
+    }
+    [Test]
+    [Category("Booking API")]
+    public async Task DeleteBookingId()
+    {
+        var authRequest=TestDataLoader.LoadJson<AuthRequest>("API/CreateAuth.json");
+        var authResponse=await _authService.CreateAuthAsync(authRequest);
+        var tokenResponse=ResponseParser.Deserialize<AuthResponse>(authResponse);
+        var testToken=tokenResponse.Token;
+
+        var createBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
+        var createBookingResponse=await _bookingService.CreateBookingAsync(createBookRequest);
+        var createBookingId=ResponseParser.Deserialize<CreateBookingResponse>(createBookingResponse);
+        ResponseLogger.PrintResponse(createBookingResponse);
+        var bookingId=createBookingId.Bookingid;
+        Assert.That(bookingId,Is.GreaterThan(0));
+
+        var deleteBookingId=await _bookingService.DeleteBookingIdAsync(bookingId,testToken);
+        ResponseLogger.PrintResponse(deleteBookingId);
+        ResponseValidators.ValidateStatusCode(deleteBookingId,201);
+
+        var getBookingIdResponse=await _bookingService.GetBookingByIdAsync(bookingId);
+        ResponseLogger.PrintResponse(getBookingIdResponse);
+        ResponseValidators.ValidateStatusCode(getBookingIdResponse,404);
+    }
+    [Test]
+    [Category("Negative-Suite")]
+    public async Task DeleteBookingId_Workflow()
+    {
+        var authRequest=TestDataLoader.LoadJson<AuthRequest>("API/CreateAuth.json");
+        var authResponse=await _authService.CreateAuthAsync(authRequest);
+        var tokenResponse=ResponseParser.Deserialize<AuthResponse>(authResponse);
+        var testToken=tokenResponse.Token;
+
+        var createBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
+        var createBookingResponse=await _bookingService.CreateBookingAsync(createBookRequest);
+        var createBookingId=ResponseParser.Deserialize<CreateBookingResponse>(createBookingResponse);
+        ResponseLogger.PrintResponse(createBookingResponse);
+        var bookingId=createBookingId.Bookingid;
+        Assert.That(bookingId,Is.GreaterThan(0));
+
+        var deleteBookingId=await _bookingService.DeleteBookingIdAsync(bookingId,testToken);
+        ResponseLogger.PrintResponse(deleteBookingId);
+        ResponseValidators.ValidateStatusCode(deleteBookingId,201);
+
+        var getBookingIdResponse=await _bookingService.GetBookingByIdAsync(bookingId);
+        ResponseLogger.PrintResponse(getBookingIdResponse);
+        ResponseValidators.ValidateStatusCode(getBookingIdResponse,404);
+    }
+    [Test]
+     [Category("Negative-Suite")]
+    public async Task UpdateBooking_WithoutToken()
+    {
+        var createRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
+        ResponseLogger.PrintRequest<BookingRequest>(createRequest);
+        var createresponse=await _bookingService.CreateBookingAsync(createRequest);
+        var createBookingId=ResponseParser.Deserialize<CreateBookingResponse>(createresponse);
+         ResponseLogger.PrintResponse(createresponse);
+        var userBookingId=createBookingId.Bookingid;
+        ResponseLogger.PrintResponse(createresponse);
+
+        var updateBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/UpdateBooking.json");
+        // ResponseLogger.PrintRequest<BookingRequest>(updateBookRequest);
+        var updateBookingResponse=await _bookingService.UpdateBookingAsync(userBookingId,updateBookRequest,"");
+        ResponseLogger.PrintResponse(updateBookingResponse);
+        ResponseValidators.ValidateStatusCode(updateBookingResponse,403);
 
 
+    }
+    [Test]
+    [Category("Negative-Suite")]
+    public async Task DeleteBookingId_WithoutIdToken()
+    {
+        var createBookRequest=TestDataLoader.LoadJson<BookingRequest>("API/CreateBooking.json");
+        var createBookingResponse=await _bookingService.CreateBookingAsync(createBookRequest);
+        var createBookingId=ResponseParser.Deserialize<CreateBookingResponse>(createBookingResponse);
+        // ResponseLogger.PrintResponse(createBookingResponse);
+        var bookingId=createBookingId.Bookingid;
+        Assert.That(bookingId,Is.GreaterThan(0));
+
+        var deleteBookingId=await _bookingService.DeleteBookingIdAsync(bookingId,"");
+        ResponseLogger.PrintResponse(deleteBookingId);
+        ResponseValidators.ValidateStatusCode(deleteBookingId,403);
     }
 
 }
