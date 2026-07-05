@@ -9,7 +9,7 @@ public class BookingService
 
     public BookingService()
     {
-        _client=new APIclient(ConfigManager.BaseUrl2);
+        _client=new APIclient(SettingsProvider.ActiveProfile.ApiBaseUrl);
     }
     public Task<RestResponse> GetAllBookingIdsAsync()
     {

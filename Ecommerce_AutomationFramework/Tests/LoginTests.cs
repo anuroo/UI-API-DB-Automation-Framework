@@ -11,8 +11,8 @@ public class LoginTests
         using var driver = DriverFactory.Create(SettingsProvider.Current.Browser, SettingsProvider.Current.Headless);
         var loginPage = new LoginPage(driver);
 
-        loginPage.Open(SettingsProvider.Current.BaseUrl);
+        loginPage.Open(SettingsProvider.ActiveProfile.BaseUrl);
 
-        Assert.That(driver.Url, Does.Contain("advantageonlineshopping"));
+        Assert.That(driver.Url, Does.StartWith(SettingsProvider.ActiveProfile.BaseUrl));
     }
 }

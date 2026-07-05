@@ -1,5 +1,6 @@
 using RestSharp;
 [TestFixture]
+[Ignore("Legacy scaffold. Replace with nopCommerce API tests.")]
 public class BookingTest
 {
     private BookingService _bookingService;

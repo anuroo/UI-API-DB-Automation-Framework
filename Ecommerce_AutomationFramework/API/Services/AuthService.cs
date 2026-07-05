@@ -7,7 +7,7 @@ public class AuthService
 
     public AuthService()
     {
-        _client=new APIclient(ConfigManager.BaseUrl2);
+        _client = new APIclient(SettingsProvider.ActiveProfile.ApiBaseUrl);
     }
 
     public Task<RestResponse> CreateAuthAsync(AuthRequest authRequest)

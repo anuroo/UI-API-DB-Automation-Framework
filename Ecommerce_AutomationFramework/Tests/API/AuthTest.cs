@@ -1,5 +1,6 @@
 using RestSharp;
 [TestFixture]
+[Ignore("Legacy scaffold. Replace with nopCommerce authentication/API tests.")]
 public class AuthTest
 {
     private AuthService _authService=null!;

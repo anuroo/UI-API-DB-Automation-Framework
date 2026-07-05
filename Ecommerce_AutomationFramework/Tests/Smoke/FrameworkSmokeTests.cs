@@ -7,7 +7,7 @@ public class FrameworkSmokeTests
     [Test]
     public void Settings_ShouldBeLoaded()
     {
-        Assert.That(SettingsProvider.Current.ApiBaseUrl, Is.Not.Empty);
-        Assert.That(SettingsProvider.Current.BaseUrl, Is.Not.Empty);
+        Assert.That(SettingsProvider.ActiveProfile.ApiBaseUrl, Is.Not.Empty);
+        Assert.That(SettingsProvider.ActiveProfile.BaseUrl, Is.Not.Empty);
     }
 }

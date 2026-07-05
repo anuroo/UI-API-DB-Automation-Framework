@@ -3,9 +3,20 @@
 public class DatabaseScaffoldTests
 {
     [Test]
-    [Explicit("Database validation is scaffolded only in Phase 0.")]
-    public void Database_Layer_ShouldBePresent()
+    // [Explicit("Set ESHOP_DB_CONNECTION to the exact Aspire Postgres connection string and run this once to verify connectivity.")]
+    public async Task Postgres_Connection_Should_Work()
     {
-        Assert.Pass("Database helper and repository scaffolds are present.");
+        var db = new DbHelper(SettingsProvider.ActiveProfile.DbConnectionString);
+        var value = await db.QuerySingleAsync<int>("SELECT 1");
+
+        Assert.That(value, Is.EqualTo(1));
+    }
+    [Test]
+    public async Task TestCount_CatalogDb()
+    {
+        var db=new DbHelper(SettingsProvider.ActiveProfile.DbConnectionString);
+        var count = await db.QuerySingleAsync<int>("Select COUNT(*) FROM \"Catalog\"");
+        Assert.That(count,Is.EqualTo(101));
+        System.Console.WriteLine($"The total count of catalog db:{count}");
     }
 }

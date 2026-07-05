@@ -8,7 +8,7 @@ public class AccountService
 
     public AccountService()
     {
-        _client = new APIclient(ConfigManager.BaseUrl);
+        _client = new APIclient(SettingsProvider.ActiveProfile.ApiBaseUrl);
     }
 
     public Task<RestResponse> RegisterUserAsync(RegisterRequest request)

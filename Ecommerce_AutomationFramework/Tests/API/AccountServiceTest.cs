@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 [TestFixture]
+[Ignore("Legacy scaffold. Replace with nopCommerce account/API tests.")]
 public class AccountServiceTest
 {
     private AccountService _accountService = null!;

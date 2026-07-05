@@ -1,5 +1,5 @@
 public static class ConfigManager
 {
-    public static string BaseUrl => "https://www.advantageonlineshopping.com";
-    public static string BaseUrl2 => "https://restful-booker.herokuapp.com";
+    public static string BaseUrl => SettingsProvider.ActiveProfile.BaseUrl;
+    public static string BaseUrl2 => SettingsProvider.ActiveProfile.ApiBaseUrl;
 }
